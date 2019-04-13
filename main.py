@@ -1,4 +1,6 @@
 from Sensor import Sensor
+import serial
+import time
 
 class CanSat:
     def __init__(self, mesurments):
@@ -69,10 +71,18 @@ sps = Sensor('SPS')
 sps.add_measurement('pm10', 'r(10, 200)')
 
 sps.add_dependency('pm10', c.get_mesurments, 'pm10')
-sps.add_measurement('sps25', 'd.pm10*r(0.8, 1.2)')
+sps.add_measurement('pm25', 'd.pm10*r(0.8, 1.2)')
 
 c.add_sensor(sps)
+structure=['rssi','x','y', 'h', 'temperature', 'pressure', 'pm25', 'pm10']
+with serial.Serial('com10', 19200, timeout=1) as ser:
+    while(c.mesurments['h']>0):
+        c.update()
+        text='b\''
+        for s in structure:
+            text+=(str(mesurments[s])+'_')
+        text=text[:1]+'\''
 
-while(c.mesurments['h']>0):
-    c.update()
-    print(c.mesurments)
+        print(c.mesurments)
+        ser.write(text.encode())
+        time.sleep(1)

@@ -19,8 +19,8 @@ class Sensor:
 
     # Add dependencies used in formulas for this sensor
     #Use .add_dependency('pressure', 1035)
-    def add_dependency(self, name, value):
-        self.dependencies[name]=value
+    def add_dependency(self, name, function, id):
+        self.dependencies[name]={'foo':function, 'id':id}
 
     def update(self):
         self.mesurments={}
@@ -47,7 +47,7 @@ class Sensor:
             # Arguments beegined with '_' aren't parsed as dependency
             def __getattribute__(self, key):
                 if key[0] != '_':
-                    return self._dep[key]
+                    return self._dep[key]['foo'](self._dep[key]['id'])
                 else:
                      return super().__getattribute__(key)
 
@@ -61,9 +61,9 @@ class Sensor:
         # Evaluates formula
         return eval(formula)
 
-    # randomizer picks random number from range(num - range, num + range)
-    def randomizer(self, num, range):
-        return random.uniform(num-range, num+range)
+    # randomizer picks random number from range(min, max)
+    def randomizer(self, min, max):
+        return random.uniform(min, max)
 
 # Example code:
 '''

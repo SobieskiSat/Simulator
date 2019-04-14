@@ -7,15 +7,15 @@ class Sensor:
         self.name = name
 
         # Formulas to simulate sensr mesurments
-        self.formulas = {}
+        self.formulas = []
 
         # Dependencies used in formulas for this sensor
         self.dependencies = {}
 
     # Add formulas to simulate sensr mesurments
     # Use: .add_measurement('teperature', '2+d.pressure*r(10,2)')
-    def add_measurement(self, name, formula):
-        self.formulas[name] = formula
+    def add_measurement(self, name, formula, accuracy):
+        self.formulas.append({'name':name, 'formula':formula, 'accuracy':accuracy})
 
     # Add dependencies used in formulas for this sensor
     #Use .add_dependency('pressure', 1035)
@@ -24,10 +24,10 @@ class Sensor:
 
     def update(self):
         self.mesurments={}
-        for key, value in self.formulas.items():
-            self.mesurments[key] = self.count(value)
+        for mes in self.formulas:
+            self.mesurments[mes['name']] = self.count(mes)
 
-    def count(self, formula):
+    def count(self, mes):
 
         #   Varibles for formulas
 
@@ -58,8 +58,11 @@ class Sensor:
         # Use in formulas: d.pressure
         # Attribute must be defined by add_dependency
 
-        # Evaluates formula
-        return eval(formula)
+        # Evaluates formula with accuracy
+        ans = round(eval(mes['formula']), mes['accuracy'])
+        if(mes['accuracy']==0):
+            return int(ans)
+        return ans
 
     # randomizer picks random number from range(min, max)
     def randomizer(self, min, max):

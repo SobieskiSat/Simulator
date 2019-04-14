@@ -34,7 +34,7 @@ class CanSat:
 
 
 
-mesurments = {'x':100.23, 'y':96.78, 'h':504, 'temperature':23, 'pm10':50}
+mesurments = {'x':50.5, 'y':19.5, 'h':504, 'temperature':23, 'pm10':50}
 c = CanSat(mesurments)
 
 
@@ -52,7 +52,7 @@ c.add_sensor(gps)
 
 bmp = Sensor('BMP280')
 
-bmp.add_measurement('pressure', '1013-d.h/8*r(0.95,1.05)')
+bmp.add_measurement('pressure', '1013-d.h/8*r(0.99,1.01)')
 bmp.add_dependency('h', c.get_mesurments, 'h')
 
 bmp.add_measurement('temperature', 'd.t-d.dh/100*r(0.9, 1.1)')
@@ -78,11 +78,11 @@ structure=['rssi','x','y', 'h', 'temperature', 'pressure', 'pm25', 'pm10']
 with serial.Serial('com10', 19200, timeout=1) as ser:
     while(c.mesurments['h']>0):
         c.update()
-        text='b\''
+        text=''
         for s in structure:
             text+=(str(mesurments[s])+'_')
-        text=text[:1]+'\''
-
-        print(c.mesurments)
+        text=text[:-1]+'\'\n'
+        print(text)
+        #print(c.mesurments)
         ser.write(text.encode())
-        time.sleep(1)
+        time.sleep(0.5)

@@ -124,4 +124,4 @@ with serial.Serial('com12', 19200, timeout=1) as ser:
         print(text)
         #print(c.mesurments)
         ser.write(text.encode())
-        time.sleep(0.5)
+        time.sleep(0.3)

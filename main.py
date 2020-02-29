@@ -2,6 +2,7 @@ from Sensor import Sensor
 import serial
 import time
 import threading
+import string
 
 class CanSat:
     def __init__(self, mesurments):
@@ -112,15 +113,18 @@ dht22.add_measurement('humidity', 'r(0, 100)', 0)
 c.add_sensor(dht22)
 
 
-
-structure=['rssi','send_num','x','y','h','pressure', 'temperature', 'air_quality', 'pm25', 'pm10','humidity','battery']
-with serial.Serial('com12', 19200, timeout=1) as ser:
+structure=['x','y','h','pressure', 'temperature']
+#structure=['rssi','send_num','x','y','h','pressure', 'temperature', 'air_quality', 'pm25', 'pm10','humidity','battery']
+with serial.Serial('com1', 19200, timeout=1) as ser:
     while(c.mesurments['h']>0):
         c.update()
         text=''
         for s in structure:
-            text+=(str(mesurments[s])+'_')
-        text=text[:-1]+'\'\n'
+            text+=(str(s[0]))
+            text+=(str(mesurments[s]))
+            text+=(str(s[0]).upper())
+
+        text=text+'\n'
         print(text)
         #print(c.mesurments)
         ser.write(text.encode())

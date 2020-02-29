@@ -7,7 +7,7 @@ readings={'rssi':0,'send_num':0,'x':0,'y':0,'h':0,'pressure':0,
 
 readings['rssi']=0 #defaultowe rssi
 
-DIR='C:/Users/Andrzej/Desktop/'
+DIR='C:/Users/aszab/desktop/TMP/'
 
 file = open(DIR+"raw.txt","r")
 fields = file.readlines()
@@ -55,7 +55,9 @@ def load_reading(line_num):
 
 structure=['rssi','send_num','x','y','h','pressure', 'temperature', 'air_quality', 'pm25', 'pm10','humidity','battery']
 line_num=0
-with serial.Serial('com12', 19200, timeout=1) as ser:
+print("press enter")
+input()
+with serial.Serial('com1', 19200, timeout=1) as ser:
     while(line_num<4600):
         load_reading(line_num)
         text=''
